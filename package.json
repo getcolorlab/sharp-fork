@@ -103,7 +103,8 @@
     "package-from-github-release": "node npm/from-github-release",
     "docs-build": "node docs/build && node docs/search-index/build",
     "docs-serve": "cd docs && npx serve",
-    "docs-publish": "cd docs && npx firebase-tools deploy --project pixelplumbing --only hosting:pixelplumbing-sharp"
+    "docs-publish": "cd docs && npx firebase-tools deploy --project pixelplumbing --only hosting:pixelplumbing-sharp",
+    "watch": "nodemon --config nodemon.json"
   },
   "type": "commonjs",
   "main": "lib/index.js",
@@ -178,6 +179,7 @@
     "license-checker": "^25.0.1",
     "mocha": "^10.4.0",
     "node-addon-api": "^8.0.0",
+    "nodemon": "^3.0.3",
     "nyc": "^15.1.0",
     "prebuild": "^13.0.0",
     "semistandard": "^17.0.0",

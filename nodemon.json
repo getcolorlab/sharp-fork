@@ -1,0 +1,6 @@
+{
+  "watch": ["src/**/*.cc", "src/**/*.h", "printlane/convert.js"],
+  "ext": "cc",
+  "verbose": false,
+  "exec": "npm i --build-from-source && clear && node printlane/convert.js"
+}
