@@ -357,6 +357,21 @@ class PipelineWorker : public Napi::AsyncWorker {
         image = sharp::Flatten(image, baton->flattenBackground);
       }
 
+      // Apply output ICC profile
+      if (!baton->withIccProfile.empty()) {
+        try {
+          image = image.icc_transform(const_cast<char*>(baton->withIccProfile.data()), VImage::option()
+            ->set("input_profile", processingProfile)
+            ->set("embedded", TRUE)
+            ->set("depth", sharp::Is16Bit(image.interpretation()) ? 16 : 8)
+            ->set("intent", VIPS_INTENT_PERCEPTUAL));
+        } catch(...) {
+          sharp::VipsWarningCallback(nullptr, G_LOG_LEVEL_WARNING, "Invalid profile", nullptr);
+        }
+      } else if (baton->keepMetadata & VIPS_FOREIGN_KEEP_ICC) {
+        image = sharp::SetProfile(image, inputProfile);
+      }
+
       // Negate the colours in the image
       if (baton->negate) {
         image = sharp::Negate(image, baton->negateAlpha);
@@ -806,20 +821,6 @@ class PipelineWorker : public Napi::AsyncWorker {
           .copy(VImage::option()->set("interpretation", colourspace));
       }
 
-      // Apply output ICC profile
-      if (!baton->withIccProfile.empty()) {
-        try {
-          image = image.icc_transform(const_cast<char*>(baton->withIccProfile.data()), VImage::option()
-            ->set("input_profile", processingProfile)
-            ->set("embedded", TRUE)
-            ->set("depth", sharp::Is16Bit(image.interpretation()) ? 16 : 8)
-            ->set("intent", VIPS_INTENT_PERCEPTUAL));
-        } catch(...) {
-          sharp::VipsWarningCallback(nullptr, G_LOG_LEVEL_WARNING, "Invalid profile", nullptr);
-        }
-      } else if (baton->keepMetadata & VIPS_FOREIGN_KEEP_ICC) {
-        image = sharp::SetProfile(image, inputProfile);
-      }
       // Override EXIF Orientation tag
       if (baton->withMetadataOrientation != -1) {
         image = sharp::SetExifOrientation(image, baton->withMetadataOrientation);
