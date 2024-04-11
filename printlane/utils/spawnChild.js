@@ -24,9 +24,9 @@ const { spawn } = require('child_process');
  *   .then(output => console.log(output))
  *   .catch(error => console.error(error));
  */
-module.exports = async function spawnChild(programPath, args, options = {}, opts = {
+module.exports = async function spawnChild (programPath, args, options = {}, opts = {
   logStdOut: false,
-  logStdErr: false,
+  logStdErr: false
 }) {
   // Spawn child
   const child = spawn(
@@ -36,9 +36,9 @@ module.exports = async function spawnChild(programPath, args, options = {}, opts
       ...options,
       env: {
         ...process.env,
-        ...options.env,
-      },
-    },
+        ...options.env
+      }
+    }
   );
 
   // Gather data
@@ -68,4 +68,4 @@ module.exports = async function spawnChild(programPath, args, options = {}, opts
 
   // Return the data
   return data;
-}
+};

@@ -8,15 +8,15 @@ const inFile = pathResolve(__dirname, 'files/100-0-0-100-fogra.tif');
 const swop = pathResolve(__dirname, 'files/swop.icc');
 
 // Helper to get a pixel value (uses `vips`, install with `brew install vips`)
-async function getPixelValues(fileName, x, y) {
+async function getPixelValues (fileName, x, y) {
   const data = await spawnChild(
     'vips',
     [
-      `getpoint`,
+      'getpoint',
       `${fileName}`,
       `${x}`, // pixel x
-      `${y}`, // pixel y
-    ],
+      `${y}` // pixel y
+    ]
   );
 
   // Remove linebreaks and trim spaces from output and return (output is a string, e.g. '255 128 0 0`)
@@ -24,7 +24,7 @@ async function getPixelValues(fileName, x, y) {
 }
 
 // Helper to validate if a pixel equals to specific values (uses `vips`, install with `brew install vips`)
-async function validatePixelValues(fileName, expectedPixelValues) {
+async function validatePixelValues (fileName, expectedPixelValues) {
   for (let i = 0; i < 10; i += 1) {
     const pixelValues = await getPixelValues(fileName, i, i);
     assert.strictEqual(pixelValues, expectedPixelValues);
